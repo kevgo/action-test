@@ -1,18 +1,25 @@
-name: conventional
-description: test
+name: conventional commits
+description:
+  enforces conventional commit style in pull requests with Ory-specific defaults
 
 inputs:
   GITHUB_TOKEN:
-    description: GitHub token
+    description: the GitHub token to use
     required: true
   types:
-    description: override types
+    description: override the default types
     required: false
-    default: type1, type2
+    default: |
+      type1
+      type2
+      type3
   scopes:
     description: override scopes
     required: false
-    default: one, two, three
+    default: |
+      one
+      two
+      three
 
 runs:
   using: composite
