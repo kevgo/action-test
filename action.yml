@@ -3,6 +3,9 @@ description:
   enforces conventional commit style in pull requests with Ory-specific defaults
 
 inputs:
+  GITHUB_TOKEN:
+    description: the GitHub token to use
+    required: true
   types:
     description: override the default types
     required: false
@@ -24,7 +27,7 @@ runs:
   steps:
     - uses: amannn/action-semantic-pull-request@v4
       env:
-        GITHUB_TOKEN: $GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
         types: ${{ inputs.types }}
         scopes: ${{ inputs.scopes }}
