@@ -5,6 +5,10 @@ inputs:
   GITHUB_TOKEN:
     description: GitHub token
     required: true
+  types:
+    description: override types
+    required: false
+    default: type1, type2
   scopes:
     description: override scopes
     required: false
