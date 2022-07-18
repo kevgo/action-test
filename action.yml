@@ -1,6 +1,11 @@
 name: conventional
 description: test
 
+inputs:
+  GITHUB_TOKEN:
+    description: GitHub token
+    required: true
+
 runs:
   using: composite
   steps:
