@@ -1,0 +1,13 @@
+name: conventional
+description: test
+
+runs:
+  using: composite
+  steps:
+    - run: echo 111111111111111
+      shell: bash
+    - uses: amannn/action-semantic-pull-request@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: echo 222222222222222
+      shell: bash
