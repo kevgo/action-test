@@ -13,6 +13,6 @@ runs:
       shell: bash
     - uses: amannn/action-semantic-pull-request@v4
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
     - run: echo 222222222222222
       shell: bash
