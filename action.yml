@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: define the default types
+    - name: define the default types used at Ory
       id: default_types
       uses: actions/github-script@v6
       with:
@@ -31,19 +31,33 @@ runs:
             chore
           `
           return defaultTypes.trim()
-    - name: customize types based on config file
+    - name: define the default scopes used at Ory
+      id: default_scopes
+      uses: actions/github-script@v6
+      with:
+        result-encoding: string
+        script: |
+          const defaultScopes = `
+            blog
+            cms
+            deps
+            docs
+            home
+            stats
+          `
+          return defaultScopes.trim()
+    - name: load repo-specific types
       id: custom_types
       uses: actions/github-script@v6
       with:
         result-encoding: string
         script: |
           let types = `${{ steps.default_types.outputs.result }}`
-          const fs = require("fs")
           const configPath = ".github/conventional_commits.json"
           try {
-            var configText = fs.readFileSync(configPath, "utf8")
+            var configText = require("fs").readFileSync(configPath, "utf8")
           } catch (e) {
-            // no config file found --> use the default types
+            // no config file --> use the default types
             return types
           }
           try {
@@ -51,23 +65,48 @@ runs:
           } catch (e) {
             console.log(`ERROR: invalid JSON in ${configPath}:`)
             console.log(e)
+            // invalid config file -->  use the default types
             return types
           }
-          console.log(config)
-          console.log(config.types)
           if (config.types) {
             types = config.types.join("\n")
           }
           if (config.addTypes) {
             types += "\n" + config.addTypes.join("\n")
           }
-          console.log("types at end:", types)
           return types
-    - run: echo "${{steps.custom_types.outputs.result}}"
-      shell: bash
+    - name: customize scopes based on config file
+      id: custom_scopes
+      uses: actions/github-script@v6
+      with:
+        result-encoding: string
+        script: |
+          let scopes = `${{ steps.default_scopes.outputs.result }}`
+          const configPath = ".github/conventional_commits.json"
+          try {
+            var configText = require("fs").readFileSync(configPath, "utf8")
+          } catch (e) {
+            // no config file --> use the default scopes
+            return scopes
+          }
+          try {
+            var config = JSON.parse(configText)
+          } catch (e) {
+            console.log(`ERROR: invalid JSON in ${configPath}:`)
+            console.log(e)
+            // invalid config file --> use the default scopes
+            return scopes
+          }
+          if (config.scopes) {
+            scopes = config.scopes.join("\n")
+          }
+          if (config.addScopes) {
+            scopes += "\n" + config.addScopes.join("\n")
+          }
+          return scopes
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
         types: ${{ steps.custom_types.outputs.result }}
-        # scopes: ${{ inputs.scopes }}
+        scopes: ${{ steps.custom_scopes.outputs.result }}
