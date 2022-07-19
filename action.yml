@@ -73,7 +73,7 @@ runs:
         result-encoding: string
         script: |
           const config = ${{ steps.config.outputs.result }}
-          return config.requireScope ? config.requireScope : false
+          return config.requireScope || false
 
     - uses: amannn/action-semantic-pull-request@v4
       env:
