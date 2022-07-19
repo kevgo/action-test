@@ -25,15 +25,17 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/github-script@v6
+    - id: load
+      uses: actions/github-script@v6
       with:
         script: |
           const fs = require("fs")
-          const process = require("process")
           console.log(fs.readdirSync("."))
           const content = fs.readFileSync("README.md", "utf8")
           console.log(content)
           return { a: 1, b: 2 }
+    - run: echo "${{steps.load.outputs.result}}"
+      shell: bash
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
