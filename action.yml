@@ -52,6 +52,7 @@ runs:
           if (config.addTypes) {
             types += config.addTypes.join("\n")
           }
+          console.log("types at end:", types)
           return types
     - run: echo "${{steps.custom_types.outputs.result}}"
       shell: bash
