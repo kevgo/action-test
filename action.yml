@@ -6,18 +6,12 @@ inputs:
   GITHUB_TOKEN:
     description: the GitHub token to use
     required: true
-  scopes:
-    description: override scopes
-    required: false
-    default: |
-      one
-      two
-      three
 
 runs:
   using: composite
   steps:
-    - id: default_types
+    - name: define the default types
+      id: default_types
       uses: actions/github-script@v6
       with:
         result-encoding: string
@@ -28,13 +22,14 @@ runs:
             "type3"
           ]
           return defaultTypes.join("\n")
-    - id: custom_types
+    - name: customize types based on config file
+      id: custom_types
       uses: actions/github-script@v6
       with:
         result-encoding: string
         script: |
-          const fs = require("fs")
           const types = `${{ steps.default_types.outputs.result }}`
+          const fs = require("fs")
           try {
             const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
           } catch (e) {
@@ -49,11 +44,11 @@ runs:
             types += config.addTypes
           }
           return types
-    - run: echo "${{steps.load_types.outputs.result}}"
+    - run: echo "${{steps.custom_types.outputs.result}}"
       shell: bash
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        types: ${{ inputs.types }}
-        scopes: ${{ inputs.scopes }}
+        types: ${{ steps.custom_types.outputs.result }}
+        # scopes: ${{ inputs.scopes }}
