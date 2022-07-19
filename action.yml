@@ -30,7 +30,7 @@ runs:
       with:
         script: |
           const fs = require("fs")
-          const defaultTypes = "${{ inputs.types }}"
+          const defaultTypes = `${{ inputs.types }}`
           console.log(defaultTypes)
           console.log(fs.readdirSync("."))
           const content = fs.readFileSync("README.md", "utf8")
