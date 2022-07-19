@@ -82,6 +82,7 @@ runs:
         types: ${{ steps.types.outputs.result }}
         scopes: ${{ steps.scopes.outputs.result }}
         requireScope: ${{ steps.require_scope.outputs.result }}
+        subjectPattern: ^(?![A-Z]).+$
         subjectPatternError: |
           The subject should start with a lowercase letter, yours is uppercase:
           "{subject}"
