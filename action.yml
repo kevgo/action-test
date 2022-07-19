@@ -10,12 +10,29 @@ inputs:
 runs:
   using: composite
   steps:
+    - id: config
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const CONFIG_PATH = ".github/conventional_commits.json"
+          try {
+            var configText = require("fs").readFileSync(CONFIG_PATH, "utf8")
+          } catch (e) {
+            return {}
+          }
+          try {
+            return JSON.parse(configText)
+          } catch (e) {
+            console.log(`ERROR: invalid JSON in ${CONFIG_PATH}:`, e)
+          }
+          return {}
+
     - id: types
       uses: actions/github-script@v6
       with:
         result-encoding: string
         script: |
-          const defaultTypes = `
+          const DEFAULT_TYPES = `
             feat
             fix
             revert
@@ -27,20 +44,10 @@ runs:
             autogen
             security
             ci
-            chore`
-          const configPath = ".github/conventional_commits.json"
-          try {
-            var configText = require("fs").readFileSync(configPath, "utf8")
-          } catch (e) {
-            return defaultTypes
-          }
-          try {
-            var config = JSON.parse(configText)
-          } catch (e) {
-            console.log(`ERROR: invalid JSON in ${configPath}:`, e)
-            return defaultTypes
-          }
-          const types = config.types ? config.types.join("\n") : defaultTypes
+            chore
+          `
+          const config = ${{ steps.config.outputs.result }}
+          const types = config.types ? config.types.join("\n") : DEFAULT_TYPES
           return config.addTypes ? types + "\n" + config.addTypes.join("\n") : types
 
     - id: scopes
@@ -48,26 +55,16 @@ runs:
       with:
         result-encoding: string
         script: |
-          const defaultScopes = `
+          const DEFAULT_SCOPES = `
             blog
             cms
             deps
             docs
             home
-            stats`
-          const configPath = ".github/conventional_commits.json"
-          try {
-            var configText = require("fs").readFileSync(configPath, "utf8")
-          } catch (e) {
-            return defaultScopes
-          }
-          try {
-            var config = JSON.parse(configText)
-          } catch (e) {
-            console.log(`ERROR: invalid JSON in ${configPath}:`, e)
-            return defaultScopes
-          }
-          let scopes = config.scopes ? config.scopes.join("\n") : defaultScopes
+            stats
+          `
+          const config = ${{ steps.config.outputs.result }}
+          let scopes = config.scopes ? config.scopes.join("\n") : DEFAULT_SCOPES
           return config.addScopes ? scopes + "\n" + config.addScopes.join("\n") : scopes
 
     - id: require_scope
@@ -75,19 +72,7 @@ runs:
       with:
         result-encoding: string
         script: |
-          const configPath = ".github/conventional_commits.json"
-          try {
-            var configText = require("fs").readFileSync(configPath, "utf8")
-          } catch (e) {
-            return false
-          }
-          try {
-            var config = JSON.parse(configText)
-          } catch (e) {
-            console.log(`ERROR: invalid JSON in ${configPath}:`)
-            console.log(e)
-            return false
-          }
+          const config = ${{ steps.config.outputs.result }}
           return config.requireScope ? config.requireScope : false
 
     - uses: amannn/action-semantic-pull-request@v4
