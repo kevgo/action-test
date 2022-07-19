@@ -17,32 +17,24 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: defaults
+    - id: default_types
       uses: actions/github-script@v6
       with:
+        result-encoding: string
         script: |
           const defaultTypes = [
             "type1",
             "type2",
             "type3"
           ]
-          const defaultScopes = [
-            "scope1",
-            "scope2",
-            "scope3"
-          ]
-          return {
-            types: defaultTypes.join("\n"),
-            scopes: defaultScopes.join("\n")
-          }
+          return defaultTypes.join("\n")
     - id: custom_types
       uses: actions/github-script@v6
       with:
         result-encoding: string
         script: |
           const fs = require("fs")
-          const types = `${{ steps.defaults.outputs.types.value }}`
-          const scopes = `${{ steps.defaults.outputs.scopes.value }}`
+          const types = `${{ steps.default_types.outputs.result }}`
           try {
             const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
           } catch (e) {
