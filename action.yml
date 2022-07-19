@@ -16,12 +16,21 @@ runs:
       with:
         result-encoding: string
         script: |
-          const defaultTypes = [
-            "type1",
-            "type2",
-            "type3"
-          ]
-          return defaultTypes.join("\n")
+          const defaultTypes = `
+            feat
+            fix
+            revert
+            docs
+            style
+            refactor
+            test
+            build
+            autogen
+            security
+            ci
+            chore
+          `
+          return defaultTypes.trim()
     - name: customize types based on config file
       id: custom_types
       uses: actions/github-script@v6
