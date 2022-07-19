@@ -47,10 +47,10 @@ runs:
           }
           console.log(config)
           if (config.types) {
-            types = config.types
+            types = config.types.join("\n")
           }
           if (config.addTypes) {
-            types += config.addTypes
+            types += config.addTypes.join("\n")
           }
           return types
     - run: echo "${{steps.custom_types.outputs.result}}"
