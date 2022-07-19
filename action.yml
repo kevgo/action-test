@@ -37,7 +37,7 @@ runs:
       with:
         result-encoding: string
         script: |
-          const types = `${{ steps.default_types.outputs.result }}`
+          let types = `${{ steps.default_types.outputs.result }}`
           const fs = require("fs")
           const configPath = ".github/conventional_commits.json"
           try {
