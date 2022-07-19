@@ -38,6 +38,8 @@ runs:
           console.log(fs.readdirSync(".."))
           console.log("../..")
           console.log(fs.readdirSync("../.."))
+          const content = fs.readFileSynce("./README.md", "utf8")
+          console.log(content)
           return { a: 1, b: 2 }
     - uses: amannn/action-semantic-pull-request@v4
       env:
