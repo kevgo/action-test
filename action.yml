@@ -2,13 +2,6 @@ name: conventional commits
 description:
   enforces conventional commit style in pull requests with Ory-specific defaults
 
-outputs:
-  types:
-    description: the default types
-    value: |
-      type1
-      type2
-      type3
 inputs:
   GITHUB_TOKEN:
     description: the GitHub token to use
@@ -24,13 +17,32 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: customize_types
+    - id: defaults
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const defaultTypes = [
+            "type1",
+            "type2",
+            "type3"
+          ]
+          const defaultScopes = [
+            "scope1",
+            "scope2",
+            "scope3"
+          ]
+          return {
+            types: defaultTypes.join("\n"),
+            scopes: defaultScopes.join("\n")
+          }
+    - id: custom_types
       uses: actions/github-script@v6
       with:
         result-encoding: string
         script: |
           const fs = require("fs")
-          const types = `${{ outputs.types.value }}`
+          const types = `${{ steps.defaults.outputs.types.value }}`
+          const scopes = `${{ steps.defaults.outputs.scopes.value }}`
           try {
             const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
           } catch (e) {
