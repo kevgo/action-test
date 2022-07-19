@@ -28,8 +28,11 @@ runs:
     - uses: actions/github-script@v6
       with:
         script: |
-          const fs = require('fs')
-          const files = fs.readdirSync(".")
+          const fs = require("fs")
+          const process = require("process")
+          const cwd = process.cwd()
+          console.log(cwd)
+          const files = fs.readdirSync(cwd)
           console.log(files)
           return { a: 1, b: 2 }
     - uses: amannn/action-semantic-pull-request@v4
