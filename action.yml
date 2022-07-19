@@ -27,7 +27,11 @@ runs:
   steps:
     - uses: actions/github-script@v6
       with:
-        script: console.log(context)
+        script: |
+          const fs = require('fs')
+          const files = fs.readdirSync(".")
+          console.log(files)
+          return { a: 1, b: 2 }
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
