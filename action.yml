@@ -39,10 +39,18 @@ runs:
         script: |
           const types = `${{ steps.default_types.outputs.result }}`
           const fs = require("fs")
+          const configPath = ".github/conventional_commits.json"
           try {
-            var config = fs.readFileSync(".github/conventional_commits.json", "utf8")
+            var configText = fs.readFileSync(configPath, "utf8")
           } catch (e) {
             // no config file found --> use the default types
+            return types
+          }
+          try {
+            var config = JSON.parse(configText)
+          } catch (e) {
+            console.log(`ERROR: invalid JSON in ${configPath}:`)
+            console.log(e)
             return types
           }
           console.log(config)
