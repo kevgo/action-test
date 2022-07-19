@@ -30,7 +30,7 @@ runs:
         result-encoding: string
         script: |
           const fs = require("fs")
-          const types = `${{ outputs.types }}`
+          const types = `${{ outputs.types.value }}`
           try {
             const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
           } catch (e) {
