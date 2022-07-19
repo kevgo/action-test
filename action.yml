@@ -40,7 +40,7 @@ runs:
           const types = `${{ steps.default_types.outputs.result }}`
           const fs = require("fs")
           try {
-            const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
+            var config = fs.readFileSync(".github/conventional_commits.json", "utf8")
           } catch (e) {
             // no config file found --> use the default types
             return types
