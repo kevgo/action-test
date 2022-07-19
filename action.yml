@@ -56,11 +56,10 @@ runs:
           console.log(config)
           console.log(config.types)
           if (config.types) {
-            console.log(111111111111111111)
             types = config.types.join("\n")
           }
           if (config.addTypes) {
-            types += config.addTypes.join("\n")
+            types += "\n" + config.addTypes.join("\n")
           }
           console.log("types at end:", types)
           return types
