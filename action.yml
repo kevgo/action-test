@@ -10,8 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: define the default types used at Ory
-      id: default_types
+    - id: types
       uses: actions/github-script@v6
       with:
         result-encoding: string
@@ -28,12 +27,23 @@ runs:
             autogen
             security
             ci
-            chore
-          `
-          return defaultTypes.trim()
+            chore`
+          const configPath = ".github/conventional_commits.json"
+          try {
+            var configText = require("fs").readFileSync(configPath, "utf8")
+          } catch (e) {
+            return defaultTypes
+          }
+          try {
+            var config = JSON.parse(configText)
+          } catch (e) {
+            console.log(`ERROR: invalid JSON in ${configPath}:`, e)
+            return defaultTypes
+          }
+          const types = config.types ? config.types.join("\n") : defaultTypes
+          return config.addTypes ? types + "\n" + config.addTypes.join("\n") : types
 
-    - name: define the default scopes used at Ory
-      id: default_scopes
+    - id: scopes
       uses: actions/github-script@v6
       with:
         result-encoding: string
@@ -44,72 +54,23 @@ runs:
             deps
             docs
             home
-            stats
-          `
-          return defaultScopes.trim()
-
-    - name: load repo-specific types
-      id: custom_types
-      uses: actions/github-script@v6
-      with:
-        result-encoding: string
-        script: |
-          let types = `${{ steps.default_types.outputs.result }}`
+            stats`
           const configPath = ".github/conventional_commits.json"
           try {
             var configText = require("fs").readFileSync(configPath, "utf8")
           } catch (e) {
-            // no config file --> use the default types
-            return types
+            return defaultScopes
           }
           try {
             var config = JSON.parse(configText)
           } catch (e) {
-            console.log(`ERROR: invalid JSON in ${configPath}:`)
-            console.log(e)
-            // invalid config file -->  use the default types
-            return types
+            console.log(`ERROR: invalid JSON in ${configPath}:`, e)
+            return defaultScopes
           }
-          if (config.types) {
-            types = config.types.join("\n")
-          }
-          if (config.addTypes) {
-            types += "\n" + config.addTypes.join("\n")
-          }
-          return types
+          let scopes = config.scopes ? config.scopes.join("\n") : defaultScopes
+          return config.addScopes ? scopes + "\n" + config.addScopes.join("\n") : scopes
 
-    - name: load repo-specific scopes
-      id: custom_scopes
-      uses: actions/github-script@v6
-      with:
-        result-encoding: string
-        script: |
-          let scopes = `${{ steps.default_scopes.outputs.result }}`
-          const configPath = ".github/conventional_commits.json"
-          try {
-            var configText = require("fs").readFileSync(configPath, "utf8")
-          } catch (e) {
-            // no config file --> use the default scopes
-            return scopes
-          }
-          try {
-            var config = JSON.parse(configText)
-          } catch (e) {
-            console.log(`ERROR: invalid JSON in ${configPath}:`)
-            console.log(e)
-            // invalid config file --> use the default scopes
-            return scopes
-          }
-          if (config.scopes) {
-            scopes = config.scopes.join("\n")
-          }
-          if (config.addScopes) {
-            scopes += "\n" + config.addScopes.join("\n")
-          }
-          return scopes
-
-    - name: load repo-specific requireScope
-      id: custom_require_scope
+    - id: require_scope
       uses: actions/github-script@v6
       with:
         result-encoding: string
@@ -127,18 +88,15 @@ runs:
             console.log(e)
             return false
           }
-          if (config.requireScope) {
-            return config.requireScope
-          }
-          return false
+          return config.requireScope ? config.requireScope : false
 
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
       with:
-        types: ${{ steps.custom_types.outputs.result }}
-        scopes: ${{ steps.custom_scopes.outputs.result }}
-        requireScope: ${{ steps.custom_require_scope.outputs.result }}
+        types: ${{ steps.types.outputs.result }}
+        scopes: ${{ steps.scopes.outputs.result }}
+        requireScope: ${{ steps.require_scope.outputs.result }}
         subjectPatternError: |
           The subject should start with a lowercase letter, yours is uppercase:
           "{subject}"
