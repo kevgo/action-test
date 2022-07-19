@@ -25,20 +25,25 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: load
+    - id: load_types
       uses: actions/github-script@v6
       with:
+        result-encoding: string
         script: |
           const fs = require("fs")
-          const defaultTypes = `${{ inputs.types }}`
-          console.log(defaultTypes)
-          console.log(fs.readdirSync("."))
-          const content = fs.readFileSync("README.md", "utf8")
-          console.log(content)
-          return { a: 1, b: 2 }
-    - run: echo "${{steps.load.outputs.result}}"
-      shell: bash
-    - run: echo "${{steps.load.outputs.result.a}}"
+          const types = `${{ inputs.types }}`
+          const config = fs.readFileSync(".github/conventional_commits.json", "utf8")
+          console.log(config)
+          if (config) {
+            if (config.types) {
+              types = config.types
+            }
+            if (config.addTypes) {
+              types += config.addTypes
+            }
+          }
+          return types
+    - run: echo "${{steps.load_types.outputs.result}}"
       shell: bash
     - uses: amannn/action-semantic-pull-request@v4
       env:
