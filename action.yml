@@ -36,6 +36,8 @@ runs:
           return { a: 1, b: 2 }
     - run: echo "${{steps.load.outputs.result}}"
       shell: bash
+    - run: echo "${{steps.load.outputs.result.a}}"
+      shell: bash
     - uses: amannn/action-semantic-pull-request@v4
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
