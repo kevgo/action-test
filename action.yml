@@ -6,6 +6,17 @@ inputs:
   GITHUB_TOKEN:
     description: the GitHub token to use
     required: true
+  requireScope:
+    required: false
+    description: passthru to amannn/action-semantic-pull-request
+  ignoreLabels:
+    required: false
+    description: passthru to amannn/action-semantic-pull-request
+  wip:
+    required: false
+    description: passthru to amannn/action-semantic-pull-request
+
+
 
 runs:
   using: composite
@@ -75,7 +86,7 @@ runs:
             types += "\n" + config.addTypes.join("\n")
           }
           return types
-    - name: customize scopes based on config file
+    - name: load repo-specific scopes
       id: custom_scopes
       uses: actions/github-script@v6
       with:
@@ -110,3 +121,9 @@ runs:
       with:
         types: ${{ steps.custom_types.outputs.result }}
         scopes: ${{ steps.custom_scopes.outputs.result }}
+        subjectPatternError: |
+          The subject should start with a lowercase letter, yours is uppercase:
+          "{subject}"
+        requireScope: ${{ inputs.requireScope }}
+        ignoreLabels: ${{ inputs.ignoreLabels }}
+        wip: ${{ inputs.wip }}
