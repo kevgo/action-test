@@ -32,8 +32,10 @@ runs:
           const process = require("process")
           const cwd = process.cwd()
           console.log(cwd)
-          const files = fs.readdirSync(cwd)
-          console.log(files)
+          console.log("cwd")
+          console.log(fs.readdirSync(cwd))
+          console.log("..")
+          console.log(fs.readdirSync(".."))
           return { a: 1, b: 2 }
     - uses: amannn/action-semantic-pull-request@v4
       env:
