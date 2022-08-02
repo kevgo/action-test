@@ -16,3 +16,4 @@ jobs:
       - run: pwd
       - run: cd .. && pwd && ls -la
       - run: cd ../.. && pwd && ls -la
+      - run: cd ../../_actions && pwd && ls -la
