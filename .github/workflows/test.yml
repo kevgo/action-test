@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
+        with:
+          path: README.md
+          key: ${{ runner.os }}-test
       - run: pwd
       - run: cd .. && pwd && ls -la
       - run: cd ../.. && pwd && ls -la
