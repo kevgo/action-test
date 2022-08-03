@@ -9,8 +9,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: README.md
-          key: ${{ runner.os }}-test
       - uses: kevgo-ory/ci/changelog@kg-create-changelog
