@@ -13,7 +13,4 @@ jobs:
         with:
           path: README.md
           key: ${{ runner.os }}-test
-      - run: pwd
-      - run: cd .. && pwd && ls -la
-      - run: cd ../.. && pwd && ls -la
-      - run: cd ../../_actions/actions/ && pwd && ls -la
+      - uses: kevgo-ory/ci/changelog@kg-create-changelog
