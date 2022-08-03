@@ -6,12 +6,31 @@
 **Table of Contents**
 
 - [ (2022-08-03)](#2022-08-03)
-- [1.2.0 (2022-08-03)](#120-2022-08-03)
   - [Unclassified](#unclassified)
+- [1.2.1 (2022-08-03)](#121-2022-08-03)
+  - [Code Generation](#code-generation)
+- [1.2.0 (2022-08-03)](#120-2022-08-03)
+  - [Unclassified](#unclassified-1)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# [](https://github.com/kevgo/action-test/compare/v1.2.0...v) (2022-08-03)
+# [](https://github.com/kevgo/action-test/compare/v1.2.1...v) (2022-08-03)
+
+### Unclassified
+
+- cleanup ([94ea9e7](https://github.com/kevgo/action-test/commit/94ea9e7dc3d9cb92111289fe2175ea074ebe6396))
+
+# [1.2.1](https://github.com/kevgo/action-test/compare/v1.2.0...v1.2.1) (2022-08-03)
+
+autogen(docs): regenerate and update changelog
+
+[skip ci]
+
+### Code Generation
+
+- **docs:** Regenerate and update changelog ([300a11d](https://github.com/kevgo/action-test/commit/300a11d19ea0d8c510d011703ab0975f3d7669db)):
+
+  [skip ci]
 
 # [1.2.0](https://github.com/kevgo/action-test/compare/67836085cf2c4f0a8106581d8c6a5adbcac6b9fe...v1.2.0) (2022-08-03)
 
